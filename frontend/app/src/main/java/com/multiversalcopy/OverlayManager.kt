@@ -28,10 +28,20 @@ class OverlayManager {
         overlayView.items = items
 
         val btnCancel = overlayRoot!!.findViewById<Button>(R.id.btnCancel)
+        val btnSelectAll = overlayRoot!!.findViewById<Button>(R.id.btnSelectAll)
         val btnCopy = overlayRoot!!.findViewById<Button>(R.id.btnCopy)
 
         btnCancel.setOnClickListener {
             onDismiss()
+        }
+
+        btnSelectAll.setOnClickListener {
+            if (overlayView.selectedIndices.size == items.size && items.isNotEmpty()) {
+                overlayView.selectedIndices.clear()
+            } else {
+                overlayView.selectedIndices.addAll(items.indices)
+            }
+            overlayView.invalidate()
         }
 
         btnCopy.setOnClickListener {

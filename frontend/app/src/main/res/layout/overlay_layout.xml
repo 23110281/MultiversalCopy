@@ -24,9 +24,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="4dp"
             android:text="Cancel"
             android:backgroundTint="#888888"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnSelectAll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="4dp"
+            android:text="Select All"
+            android:backgroundTint="#2196F3"
             android:textColor="#FFFFFF" />
 
         <Button
@@ -34,8 +44,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:text="Copy Selected"
+            android:layout_marginStart="4dp"
+            android:text="Copy"
             android:backgroundTint="#4CAF50"
             android:textColor="#FFFFFF" />
 
