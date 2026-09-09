@@ -66,7 +66,7 @@ def test_api(api_url, images_dir):
             
             if response.status_code == 200:
                 result = response.json()
-                print(f"✅ Success ({elapsed:.2f}s)")
+                print(f"[SUCCESS] Success ({elapsed:.2f}s)")
                 
                 # Filter boxes to only include text-related ones
                 all_boxes = result.get("boxes", [])
@@ -155,14 +155,14 @@ def test_api(api_url, images_dir):
                     comparison.save(out_path)
                     print(f"  Saved 3-panel comparison image: {out_path}")
                 except Exception as img_e:
-                    print(f"  ❌ Failed to generate comparison image: {img_e}")
+                    print(f"  [ERROR] Failed to generate comparison image: {img_e}")
                 
             else:
-                print(f"❌ Error HTTP {response.status_code} ({elapsed:.2f}s)")
+                print(f"[ERROR] Error HTTP {response.status_code} ({elapsed:.2f}s)")
                 print(response.text)
                 
         except requests.exceptions.RequestException as e:
-            print(f"❌ Connection Error: {e}")
+            print(f"[ERROR] Connection Error: {e}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
