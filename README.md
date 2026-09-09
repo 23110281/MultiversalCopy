@@ -1,38 +1,18 @@
 # MultiversalCopy
 
-A cross-platform clipboard copy application powered by PaddleOCR.
+An Android application that captures screen content and uses a PaddleOCR backend to extract and overlay text.
 
-## Building the Android App
+## 1. Start the Backend
+1. Upload the `backend/paddleocr_api_1.ipynb` notebook to Google Colab.
+2. Run all cells to start the PaddleOCR API server.
+3. Copy the generated ngrok URL from the output.
 
-This project uses Gradle to build the Android application. 
-The Android SDK is required to compile the app, but it is **not** tracked in this repository to save space and avoid cross-platform configuration issues.
+## 2. Install the App
+1. Go to the **Releases** tab on this GitHub repository.
+2. Download and install the latest `app-debug.apk` on your Android device.
 
-### How to set up the Android SDK
-
-1. **Download Android Studio / Command Line Tools**:
-   If you do not have the Android SDK installed, the easiest way to get it is by downloading and installing [Android Studio](https://developer.android.com/studio). Alternatively, you can download the Command Line Tools from the same page if you prefer a headless setup.
-
-2. **Locate your SDK Path**:
-   - **Windows**: `C:\Users\YourUsername\AppData\Local\Android\Sdk`
-   - **macOS**: `/Users/YourUsername/Library/Android/sdk`
-   - **Linux**: `/home/YourUsername/Android/Sdk`
-
-3. **Configure the Project**:
-   Create a file named `local.properties` in the `frontend/` directory (where the `build.gradle` is located).
-   
-   Add the following line to `frontend/local.properties`, replacing the path with your actual SDK path:
-   ```properties
-   sdk.dir=/path/to/your/android/sdk
-   ```
-
-4. **Build and Install**:
-   Navigate to the `frontend/` folder and run Gradle to build and install the app to an attached Android device or emulator.
-   ```bash
-   cd frontend
-   ./gradlew assembleDebug
-   adb install -r app/build/outputs/apk/debug/app-debug.apk
-   ```
-
-## Branches
-- `master`: The default debug version of the app. Displays raw OCR boxes, includes images, and shows text layout debug labels.
-- `release`: A clean production version. Drops image boxes, drops boxes overlapping the phone's system bars, and hides the debug labels.
+## 3. Connect and Use
+1. Open MultiversalCopy on your phone.
+2. Tap the **Settings** icon (gear) in the top right corner.
+3. Paste your ngrok URL into the API Endpoint field and hit Save.
+4. Tap **Start Capture**. You can now use the on-screen overlay to extract text from any app!
