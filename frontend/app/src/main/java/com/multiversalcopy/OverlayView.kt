@@ -50,16 +50,7 @@ class OverlayView @JvmOverloads constructor(
         style = Paint.Style.FILL
     }
 
-    private val labelPaint = Paint().apply {
-        color = Color.WHITE
-        textSize = 36f
-        isAntiAlias = true
-    }
-
-    private val labelBgPaint = Paint().apply {
-        color = Color.parseColor("#CC000000")
-        style = Paint.Style.FILL
-    }
+    // Labels removed for release build
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -71,32 +62,7 @@ class OverlayView @JvmOverloads constructor(
             // Draw fill & stroke
             canvas.drawRect(rect, if (isSelected) selectedFillPaint else fillPaint)
             canvas.drawRect(rect, if (isSelected) selectedBoxPaint else boxPaint)
-
-            // Draw label
-            val text = item.label
-            val textWidth = labelPaint.measureText(text)
-            val fontMetrics = labelPaint.fontMetrics
-            val textHeight = fontMetrics.bottom - fontMetrics.top
-
-            val padding = 8f
-            val bgRect = RectF(
-                rect.left.toFloat(),
-                rect.top.toFloat() - textHeight - padding * 2,
-                rect.left.toFloat() + textWidth + padding * 2,
-                rect.top.toFloat()
-            )
-            
-            if (bgRect.top < 0) {
-                bgRect.offset(0f, rect.height().toFloat() + textHeight + padding * 2)
-            }
-
-            canvas.drawRect(bgRect, labelBgPaint)
-            canvas.drawText(
-                text,
-                bgRect.left + padding,
-                bgRect.bottom - padding - fontMetrics.bottom,
-                labelPaint
-            )
+            // Label drawing removed for release build
         }
     }
 
