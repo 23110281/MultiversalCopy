@@ -141,7 +141,19 @@ class CaptureService : Service() {
                 return@launch
             }
             
-            // Map coordinates and content
+            // Get system insets to filter out status bar and nav bar boxes
+            val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val metrics = windowManager.currentWindowMetrics
+            val insets = metrics.windowInsets.getInsets(
+                android.view.WindowInsets.Type.systemBars() or android.view.WindowInsets.Type.displayCutout()
+            )
+            val topInset = insets.top
+            val bottomInset = insets.bottom
+            val screenHeight = metrics.bounds.height()
+
+            // Map coordinates and content, applying release-mode filters
+            val ignoredLabels = setOf("image", "figure", "header_image", "footer_image")
+            
             val detectedItems = response.boxes.mapNotNull { box ->
                 if (box.coordinate.size == 4) {
                     val rect = Rect(
@@ -150,6 +162,14 @@ class CaptureService : Service() {
                         box.coordinate[2],
                         box.coordinate[3]
                     )
+                    
+                    // Filter 1: Ignore image elements
+                    if (box.label in ignoredLabels) return@mapNotNull null
+                    
+                    // Filter 2: Ignore boxes inside the status bar or navigation bar
+                    if (rect.top < topInset) return@mapNotNull null
+                    if (rect.bottom > screenHeight - bottomInset) return@mapNotNull null
+
                     DetectedItem(rect, box.label, box.content)
                 } else null
             }
