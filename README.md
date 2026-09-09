@@ -15,4 +15,4 @@ An Android application that captures screen content and uses a PaddleOCR backend
 1. Open MultiversalCopy on your phone.
 2. Tap the **Settings** icon (gear) in the top right corner.
 3. Paste your ngrok URL into the API Endpoint field and hit Save.
-4. Tap **Start Capture**. You can now use the on-screen overlay to extract text from any app!
+4. Tap **Start Capture**. You can now use the on-screen overlay to extract text.
