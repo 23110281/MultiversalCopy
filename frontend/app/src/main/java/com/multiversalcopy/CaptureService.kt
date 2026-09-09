@@ -115,7 +115,25 @@ class CaptureService : Service() {
             captureMode = CaptureMode.UPLOADING
             Toast.makeText(this@CaptureService, "Analyzing screen...", Toast.LENGTH_SHORT).show()
             
-            val response = ApiClient.uploadScreenshot(apiUrl, imageBytes)
+            val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            val params = mapOf(
+                "temperature" to prefs.getFloat("temperature", 0.0f).toString(),
+                "top_p" to prefs.getFloat("top_p", 1.0f).toString(),
+                "repetition_penalty" to prefs.getFloat("repetition_penalty", 1.0f).toString(),
+                "layout_threshold" to prefs.getFloat("layout_threshold", 0.5f).toString(),
+                "max_new_tokens" to prefs.getInt("max_new_tokens", 2048).toString(),
+                "layout_nms" to prefs.getBoolean("layout_nms", true).toString(),
+                "use_doc_orientation_classify" to prefs.getBoolean("use_doc_orientation_classify", false).toString(),
+                "use_doc_unwarping" to prefs.getBoolean("use_doc_unwarping", false).toString(),
+                "use_layout_detection" to prefs.getBoolean("use_layout_detection", true).toString(),
+                "use_chart_recognition" to prefs.getBoolean("use_chart_recognition", false).toString(),
+                "use_seal_recognition" to prefs.getBoolean("use_seal_recognition", false).toString(),
+                "use_ocr_for_image_block" to prefs.getBoolean("use_ocr_for_image_block", false).toString(),
+                "format_block_content" to prefs.getBoolean("format_block_content", true).toString(),
+                "merge_layout_blocks" to prefs.getBoolean("merge_layout_blocks", true).toString()
+            )
+            
+            val response = ApiClient.uploadScreenshot(apiUrl, imageBytes, params)
             
             if (!response.success) {
                 captureMode = CaptureMode.ACTIVE
