@@ -13,6 +13,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -60,38 +65,72 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
 
         setContent {
             MaterialTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    AppContent()
+                val prefs = remember { getSharedPreferences("app_prefs", Context.MODE_PRIVATE) }
+                var showSettings by remember { mutableStateOf(false) }
+
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text(if (showSettings) "Settings" else "MultiversalCopy") },
+                            navigationIcon = {
+                                if (showSettings) {
+                                    IconButton(onClick = { showSettings = false }) {
+                                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                                    }
+                                }
+                            },
+                            actions = {
+                                if (!showSettings) {
+                                    IconButton(onClick = { showSettings = true }) {
+                                        Icon(Icons.Filled.Settings, contentDescription = "Settings")
+                                    }
+                                }
+                            },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                titleContentColor = MaterialTheme.colorScheme.primary,
+                            )
+                        )
+                    }
+                ) { innerPadding ->
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        if (showSettings) {
+                            val scrollState = rememberScrollState()
+                            Column(modifier = Modifier.verticalScroll(scrollState)) {
+                                SettingsMenu(prefs)
+                            }
+                        } else {
+                            AppContent(prefs)
+                        }
+                    }
                 }
             }
         }
     }
 
     @Composable
-    fun AppContent() {
-        val prefs = remember { getSharedPreferences("app_prefs", Context.MODE_PRIVATE) }
+    fun AppContent(prefs: android.content.SharedPreferences) {
         var apiUrl by remember { mutableStateOf(prefs.getString("api_base_url", "") ?: "") }
+
+        val scrollState = rememberScrollState()
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp)
         ) {
-            Text(
-                text = "MultiversalCopy",
-                style = MaterialTheme.typography.headlineMedium
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
 
             OutlinedTextField(
                 value = apiUrl,
@@ -132,18 +171,20 @@ class MainActivity : ComponentActivity() {
                 Text("Stop Capture Mode")
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "Instructions:\n\n" +
                         "1. Enter your API server URL above.\n" +
-                        "2. Tap 'Start Capture Mode'.\n" +
-                        "3. Grant necessary permissions.\n" +
-                        "4. Go to any app you want to copy from.\n" +
-                        "5. Pull down the notification shade and tap the MultiversalCopy notification.\n" +
-                        "6. Wait for the boxes to appear, then tap one to copy its text.",
+                        "2. Configure OCR settings below.\n" +
+                        "3. Tap 'Start Capture Mode'.\n" +
+                        "4. Grant necessary permissions.\n" +
+                        "5. Go to any app you want to copy from.\n" +
+                        "6. Pull down the notification shade and tap the MultiversalCopy notification.\n" +
+                        "7. Wait for the boxes to appear, then tap one to copy its text.",
                 style = MaterialTheme.typography.bodyMedium
             )
+
         }
     }
 
