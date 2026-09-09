@@ -5,8 +5,6 @@ on:
     branches:
       - master
       - release
-    tags:
-      - 'v*'
 
 jobs:
   build:
@@ -30,18 +28,13 @@ jobs:
       - name: Build Debug APK
         run: cd frontend && ./gradlew assembleDebug
 
-      - name: Upload APK as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: MultiversalCopy-debug.apk
-          path: frontend/app/build/outputs/apk/debug/app-debug.apk
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: frontend/app/build/outputs/apk/debug/app-debug.apk
-          name: Release ${{ github.ref_name }}
+          name: Auto-Build (${{ github.ref_name }})
+          tag_name: build-${{ github.sha }}
+          body: "Automated build from branch ${{ github.ref_name }} (commit ${{ github.sha }})."
           draft: false
           prerelease: false
         env:
