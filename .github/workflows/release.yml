@@ -32,13 +32,12 @@ jobs:
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
-        if: github.ref == 'refs/heads/release'
         with:
           files: frontend/app/build/outputs/apk/debug/app-debug.apk
           name: Auto-Build (${{ github.ref_name }})
           tag_name: build-${{ github.sha }}
           body: "Automated build from branch ${{ github.ref_name }} (commit ${{ github.sha }})."
           draft: false
-          prerelease: false
+          prerelease: ${{ github.ref_name == 'debug' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
