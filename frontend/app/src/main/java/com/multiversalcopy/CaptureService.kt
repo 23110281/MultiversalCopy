@@ -101,6 +101,9 @@ class CaptureService : Service() {
         captureMode = CaptureMode.CAPTURING
         
         serviceScope.launch {
+            // Delay to allow the notification shade to fully retract
+            kotlinx.coroutines.delay(1000)
+
             val imageBytes = screenCapture?.captureFrame()
             
             if (imageBytes == null) {
@@ -140,13 +143,7 @@ class CaptureService : Service() {
             }
             
             captureMode = CaptureMode.SHOWING
-            overlayManager.showOverlay(this@CaptureService, detectedItems) { tappedItem ->
-                if (tappedItem != null) {
-                    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    val clip = ClipData.newPlainText("Copied Text", tappedItem.content)
-                    clipboard.setPrimaryClip(clip)
-                    Toast.makeText(this@CaptureService, "Copied!", Toast.LENGTH_SHORT).show()
-                }
+            overlayManager.showOverlay(this@CaptureService, detectedItems) {
                 overlayManager.removeOverlay()
                 captureMode = CaptureMode.ACTIVE
             }
